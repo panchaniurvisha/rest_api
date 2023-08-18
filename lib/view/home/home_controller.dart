@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,7 +14,7 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
-  List<UserModel> userModelList = [];
+  RxList<UserModel> userModelList = <UserModel>[].obs;
   final Dio dio = Dio();
   getUserInformationFromApi() async {
     try {
@@ -21,7 +23,7 @@ class HomeController extends GetxController {
       );
       if (response.statusCode == 200) {
         debugPrint(response.data.toString());
-        userModelList = userModelFromJson(response.data);
+        userModelList(userModelFromJson(jsonEncode(response.data)));
       } else if (response.statusCode == 500) {
         debugPrint("Server Not Connect");
       }
